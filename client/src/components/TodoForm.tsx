@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, MouseEvent } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Input from './UI/Input/Input';
 import Button from './UI/Button/Button';
@@ -13,6 +13,7 @@ interface NewTodo {
 const TodoForm = () => {
   const [newTodo, setNewTodo] = useState<NewTodo>({ name: '', description: '' });
   const dispatch = useDispatch();
+  const userId: string = useSelector(({ auth }: any) => auth.user._id);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -21,7 +22,7 @@ const TodoForm = () => {
 
   const createNewTodo = async (e: MouseEvent) => {
     e.preventDefault();
-    dispatch(createTodo(newTodo));
+    dispatch(createTodo(newTodo, userId));
     setNewTodo({ name: '', description: '' });
   };
 
@@ -33,17 +34,15 @@ const TodoForm = () => {
         <Input
           type='text'
           name='name'
-          className=''
           value={newTodo.name}
           placeholder='Todo title'
           onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e)}
         />
         <Input
           type='text'
-          className=''
           name='description'
-          placeholder='Todo description'
           value={newTodo.description}
+          placeholder='Todo description'
           onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e)}
         />
         <Button onClick={(e: MouseEvent) => createNewTodo(e)}>Submit new todo</Button>

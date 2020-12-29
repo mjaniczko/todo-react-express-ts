@@ -1,50 +1,43 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
-import { ITodo } from './utils/interfaces';
+import { isLogin } from './utils/auth';
+import Header from './components/Header';
 import TodoForm from './components/TodoForm';
-import Button from './components/UI/Button/Button';
-import { fetchTodos, deleteTodo, updateTodo } from './redux/actions/todos/todos-actions';
+import TodosList from './components/TodosList';
+import LoginPage from './components/LoginPage';
+import LandingPage from './components/LandingPage';
 
-interface TodosState {
-  todosState: { todosList: ITodo[] };
-}
+const PrivateRoute = ({ component: Component, isLoggedIn, ...rest }: any) => {
+  return (
+    <Route
+      {...rest}
+      render={(props) => (isLogin() ? <Component {...props} /> : <Redirect to='/login' />)}
+    />
+  );
+};
+
+const TodoPage = () => {
+  return (
+    <>
+      <Header />
+      <TodoForm />
+      <TodosList />
+    </>
+  );
+};
 
 function App() {
-  const dispatch = useDispatch();
-  const state: ITodo[] = useSelector(
-    ({ todosState: { todosList } }: TodosState) => todosList,
-    shallowEqual
-  );
-
-  useEffect(() => {
-    dispatch(fetchTodos());
-  }, [dispatch]);
-
-  const handleDeleteTodo = async (id: string) => {
-    dispatch(deleteTodo(id));
-  };
-
-  const handleCompleteTodo = async (todo: ITodo) => {
-    dispatch(updateTodo(todo));
-  };
-
   return (
-    <div className=''>
-      <TodoForm />
-      {state.length > 0 &&
-        state.map((todo: ITodo) => {
-          return (
-            <div key={todo._id} style={{ backgroundColor: `${todo.status ? '#90ee90' : '#fff'}` }}>
-              <h1>{todo.name}</h1>
-              <p>{todo.description}</p>
+    <Router>
+      <Route exact path='/' component={LandingPage} />
+      <Switch>
+        <Route exact path='/login'>
+          <LoginPage />
+        </Route>
 
-              <Button onClick={() => handleCompleteTodo(todo)}>Completed</Button>
-              <Button onClick={() => handleDeleteTodo(todo._id)}>X</Button>
-            </div>
-          );
-        })}
-    </div>
+        <PrivateRoute exact path='/todos' component={TodoPage} />
+      </Switch>
+    </Router>
   );
 }
 

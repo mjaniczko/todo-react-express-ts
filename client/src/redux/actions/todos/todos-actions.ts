@@ -2,32 +2,62 @@ import axios from 'axios';
 import { Dispatch } from 'redux';
 
 import { ITodo } from '../../../utils/interfaces';
-import { FETCH_TODOS, CREATE_TODO, DELETE_TODO, UPDATE_TODO } from './action-types';
+
+export enum TodoActionTypes {
+  FETCH_TODOS = 'FETCH_TODOS',
+  CREATE_TODO = 'CREATE_TODO',
+  DELETE_TODO = 'DELETE_TODO',
+  UPDATE_TODO = 'UPDATE_TODO',
+}
+
+interface FetchTodos {
+  type: TodoActionTypes.FETCH_TODOS;
+  payload: ITodo[];
+}
+
+interface CreateTodo {
+  type: TodoActionTypes.CREATE_TODO;
+  payload: ITodo;
+}
+
+interface DeleteTodo {
+  type: TodoActionTypes.DELETE_TODO;
+  payload: string;
+}
+
+interface UpdateTodo {
+  type: TodoActionTypes.UPDATE_TODO;
+  payload: ITodo;
+}
+
+export type TodoActions = FetchTodos | CreateTodo | DeleteTodo | UpdateTodo;
 
 export const fetchTodosAction = (todos: ITodo[]) => ({
-  type: FETCH_TODOS,
+  type: TodoActionTypes.FETCH_TODOS,
   payload: todos,
 });
 
 export const createTodoAction = (todo: ITodo) => ({
-  type: CREATE_TODO,
+  type: TodoActionTypes.CREATE_TODO,
   payload: todo,
 });
 
 export const deleteTodoAction = (id: string) => ({
-  type: DELETE_TODO,
+  type: TodoActionTypes.DELETE_TODO,
   payload: id,
 });
 
 export const updateTodoAction = (todo: ITodo) => ({
-  type: UPDATE_TODO,
+  type: TodoActionTypes.UPDATE_TODO,
   payload: todo,
 });
 
-export const fetchTodos = () => {
+export const fetchTodos = (userId: string) => {
   return async (dispatch: Dispatch) => {
     try {
-      const res = await axios.get('http://localhost:8000/api/v1/todos');
+      const res = await axios.get('http://localhost:8000/api/v1/todos', {
+        params: { user: userId },
+      });
       const data = await res.data;
       dispatch(fetchTodosAction(data.todos));
     } catch (err) {
@@ -36,10 +66,13 @@ export const fetchTodos = () => {
   };
 };
 
-export const createTodo = (todo: { name: string; description: string }) => {
+export const createTodo = (todo: { name: string; description: string }, userId: string) => {
   return async (dispatch: Dispatch) => {
     try {
-      const res = await axios.post('http://localhost:8000/api/v1/todos', todo);
+      const res = await axios.post('http://localhost:8000/api/v1/todos', {
+        ...todo,
+        user: userId,
+      });
       const data = await res.data;
       dispatch(createTodoAction(data.todo));
     } catch (error) {

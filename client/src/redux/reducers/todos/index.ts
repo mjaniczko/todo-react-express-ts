@@ -1,16 +1,6 @@
-import {
-  FETCH_TODOS,
-  CREATE_TODO,
-  DELETE_TODO,
-  UPDATE_TODO,
-} from '../../actions/todos/action-types';
-
 import { ITodo } from '../../../utils/interfaces';
-
-interface IAction {
-  type: string;
-  payload: ITodo | ITodo[] | string | any;
-}
+import { Reducer } from 'redux';
+import { TodoActions, TodoActionTypes } from '../../actions/todos/todos-actions';
 
 interface IInitialState {
   todosList: ITodo[];
@@ -20,24 +10,27 @@ const INITIAL_STATE: IInitialState = {
   todosList: [],
 };
 
-const todosReducer = (state = INITIAL_STATE, action: IAction) => {
+const todosReducer: Reducer<IInitialState, TodoActions> = (
+  state = INITIAL_STATE,
+  action: TodoActions
+) => {
   switch (action.type) {
-    case FETCH_TODOS:
+    case TodoActionTypes.FETCH_TODOS:
       return {
         ...state,
         todosList: action.payload,
       };
-    case DELETE_TODO:
+    case TodoActionTypes.DELETE_TODO:
       return {
         ...state,
         todosList: state.todosList.filter((todo: ITodo) => todo._id !== action.payload),
       };
-    case CREATE_TODO:
+    case TodoActionTypes.CREATE_TODO:
       return {
         ...state,
         todosList: [...state.todosList, action.payload],
       };
-    case UPDATE_TODO:
+    case TodoActionTypes.UPDATE_TODO:
       const arrayIndex = state.todosList.findIndex((el: ITodo) => el._id === action.payload._id);
       let newArray = [...state.todosList];
       newArray[arrayIndex] = action.payload;
