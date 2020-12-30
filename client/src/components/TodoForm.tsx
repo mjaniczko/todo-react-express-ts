@@ -5,13 +5,8 @@ import Input from './UI/Input/Input';
 import Button from './UI/Button/Button';
 import { createTodo } from '../redux/actions/todos/todos-actions';
 
-interface NewTodo {
-  name: string;
-  description: string;
-}
-
 const TodoForm = () => {
-  const [newTodo, setNewTodo] = useState<NewTodo>({ name: '', description: '' });
+  const [newTodo, setNewTodo] = useState({ name: '', description: '' });
   const dispatch = useDispatch();
   const userId: string = useSelector(({ auth }: any) => auth.user._id);
 

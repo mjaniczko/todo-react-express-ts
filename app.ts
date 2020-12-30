@@ -9,10 +9,8 @@ app.use(cors());
 
 const jsonParser = bodyParser.json();
 
-// Test middleware
 app.use((req: any, _res, next) => {
   req.requestTime = new Date().toISOString();
-  // console.log(req.headers);
   next();
 });
 

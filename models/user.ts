@@ -30,9 +30,6 @@ const userSchema: Schema = new Schema({
       message: 'Passwords are not the same.',
     },
   },
-  // passwordChangedAt: Date,
-  // passwordResetToken: String,
-  // passwordResetExpires: Date,
 });
 
 userSchema.pre<IUser & Document>('save', async function (next) {
@@ -41,7 +38,6 @@ userSchema.pre<IUser & Document>('save', async function (next) {
 
   // Hash the password
   this.password = await bcrypt.hash(this.password, 12);
-  // Delete passwordConfirm field
   this.passwordConfirm = undefined;
   next();
 });
