@@ -6,11 +6,12 @@ interface ButtonProps {
   onClick: (e: MouseEvent) => void;
   disabled?: boolean;
   ref?: RefObject<HTMLButtonElement>;
+  type?: 'button' | 'submit' | 'reset';
 }
 
-const Button = ({ className, children, onClick, disabled, ref }: ButtonProps) => {
+const Button = ({ className, children, onClick, disabled, ref, type }: ButtonProps) => {
   return (
-    <button className={className} onClick={onClick} disabled={disabled} ref={ref}>
+    <button className={className} onClick={onClick} disabled={disabled} ref={ref} type={type}>
       {children}
     </button>
   );

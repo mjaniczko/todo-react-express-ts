@@ -29,7 +29,7 @@ const authReducer: Reducer<any, AuthActions> = (state = INITIAL_STATE, action: A
     case AuthActionTypes.LOGOUT:
       return {
         ...state,
-        user: {},
+        user: INITIAL_STATE.user,
       };
     default:
       return state;

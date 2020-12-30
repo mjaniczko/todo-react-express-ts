@@ -45,7 +45,9 @@ const TodoForm = () => {
           placeholder='Todo description'
           onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e)}
         />
-        <Button onClick={(e: MouseEvent) => createNewTodo(e)}>Submit new todo</Button>
+        <Button onClick={(e: MouseEvent) => createNewTodo(e)} type='submit'>
+          Submit new todo
+        </Button>
       </form>
     </div>
   );

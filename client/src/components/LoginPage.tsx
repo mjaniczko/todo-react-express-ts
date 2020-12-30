@@ -4,11 +4,11 @@ import { useHistory } from 'react-router-dom';
 
 import Input from './UI/Input/Input';
 import Button from './UI/Button/Button';
-import { isLogin } from './../utils/auth';
+import { hasJWTToken } from './../utils/auth';
 import { login } from './../redux/actions/auth/auth-actions';
 
 const LoginPage = () => {
-  const [auth, setAuth] = useState<{ email: string; password: string }>({
+  const [auth, setAuth] = useState({
     email: '',
     password: '',
   });
@@ -25,7 +25,9 @@ const LoginPage = () => {
     e.preventDefault();
     await dispatch(login(auth));
     setAuth({ email: '', password: '' });
-    if (isLogin()) history.push('/todos');
+    if (hasJWTToken()) {
+      history.push('/todos');
+    }
   };
 
   return (
@@ -46,7 +48,9 @@ const LoginPage = () => {
           placeholder='Password'
           onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e)}
         />
-        <Button onClick={(e: MouseEvent) => handleLogin(e)}>Login</Button>
+        <Button onClick={(e: MouseEvent) => handleLogin(e)} type='button'>
+          Login
+        </Button>
       </form>
     </div>
   );

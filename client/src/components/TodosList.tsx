@@ -6,13 +6,13 @@ import { ITodo } from './../utils/interfaces';
 import { fetchTodos, deleteTodo, updateTodo } from './../redux/actions/todos/todos-actions';
 
 interface TodosState {
-  todosState: { todosList: ITodo[] };
+  todosState: { todoList: ITodo[] };
 }
 
 const TodosList = () => {
   const dispatch = useDispatch();
-  const state: ITodo[] = useSelector(
-    ({ todosState: { todosList } }: TodosState) => todosList,
+  const todos: ITodo[] = useSelector(
+    ({ todosState: { todoList } }: TodosState) => todoList,
     shallowEqual
   );
   const userId: string = useSelector(({ auth }: any) => auth.user._id, shallowEqual);
@@ -31,15 +31,19 @@ const TodosList = () => {
 
   return (
     <div>
-      {state.length > 0 &&
-        state.map((todo: ITodo) => {
+      {todos.length > 0 &&
+        todos.map((todo: ITodo) => {
           return (
             <div key={todo._id} style={{ backgroundColor: `${todo.status ? '#90ee90' : '#fff'}` }}>
               <h1>{todo.name}</h1>
               <p>{todo.description}</p>
 
-              <Button onClick={() => handleCompleteTodo(todo)}>Completed</Button>
-              <Button onClick={() => handleDeleteTodo(todo._id)}>X</Button>
+              <Button onClick={() => handleCompleteTodo(todo)} type='button'>
+                Completed
+              </Button>
+              <Button onClick={() => handleDeleteTodo(todo._id)} type='button'>
+                Delete
+              </Button>
             </div>
           );
         })}

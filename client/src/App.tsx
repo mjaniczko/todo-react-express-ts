@@ -1,17 +1,17 @@
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
-import { isLogin } from './utils/auth';
+import { hasJWTToken } from './utils/auth';
 import Header from './components/Header';
 import TodoForm from './components/TodoForm';
 import TodosList from './components/TodosList';
 import LoginPage from './components/LoginPage';
 import LandingPage from './components/LandingPage';
 
-const PrivateRoute = ({ component: Component, isLoggedIn, ...rest }: any) => {
+const PrivateRoute = ({ component: Component, ...rest }: any) => {
   return (
     <Route
       {...rest}
-      render={(props) => (isLogin() ? <Component {...props} /> : <Redirect to='/login' />)}
+      render={(props) => (hasJWTToken() ? <Component {...props} /> : <Redirect to='/login' />)}
     />
   );
 };

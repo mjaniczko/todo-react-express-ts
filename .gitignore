@@ -3,3 +3,7 @@ node_modules
 client/node_modules
 
 config.env
+
+.yarn-error.log
+
+.eslintcache
