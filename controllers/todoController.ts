@@ -10,7 +10,7 @@ declare module 'express' {
 
 const getTodos = async (req: any, res: Response): Promise<void> => {
   try {
-    const todos: ITodo[] = await Todo.find({ user: req.query.user });
+    const todos = await Todo.find({ user: req.query.user });
 
     res.status(200).json({ todos });
   } catch (error) {
@@ -21,14 +21,14 @@ const getTodos = async (req: any, res: Response): Promise<void> => {
 const createTodo = async (req: Request, res: Response): Promise<void> => {
   try {
     const body = req.body as Pick<ITodo, 'name' | 'description' | 'status' | 'user'>;
-    const todo: ITodo = new Todo({
+    const todo = new Todo({
       name: body.name,
       description: body.description,
       status: body.status,
       user: body.user,
     });
 
-    const newTodo: ITodo = await todo.save();
+    const newTodo = await todo.save();
 
     res.status(201).json({ message: 'Todo added', todo: newTodo });
   } catch (err) {

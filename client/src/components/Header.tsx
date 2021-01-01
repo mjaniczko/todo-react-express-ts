@@ -16,7 +16,7 @@ const Header = () => {
 
   return (
     <div>
-      <button onClick={(e: MouseEvent) => handleLogout(e)}>Logout</button>
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };

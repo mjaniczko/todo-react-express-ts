@@ -39,16 +39,16 @@ const LoginPage = () => {
           name='email'
           value={auth.email}
           placeholder='Email'
-          onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e)}
+          onChange={handleChange}
         />
         <Input
           type='password'
           name='password'
           value={auth.password}
           placeholder='Password'
-          onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e)}
+          onChange={handleChange}
         />
-        <Button onClick={(e: MouseEvent) => handleLogin(e)} type='button'>
+        <Button onClick={handleLogin} type='button'>
           Login
         </Button>
       </form>

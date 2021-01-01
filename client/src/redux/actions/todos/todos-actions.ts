@@ -22,7 +22,7 @@ interface CreateTodo {
 
 interface DeleteTodo {
   type: TodoActionTypes.DELETE_TODO;
-  payload: string;
+  payload: ITodo['_id'];
 }
 
 interface UpdateTodo {
@@ -42,7 +42,7 @@ export const createTodoAction = (todo: ITodo) => ({
   payload: todo,
 });
 
-export const deleteTodoAction = (id: string) => ({
+export const deleteTodoAction = (id: ITodo['_id']) => ({
   type: TodoActionTypes.DELETE_TODO,
   payload: id,
 });

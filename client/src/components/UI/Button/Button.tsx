@@ -2,7 +2,7 @@ import { MouseEvent, RefObject } from 'react';
 
 interface ButtonProps {
   className?: string;
-  children: React.ReactNode | string;
+  children: React.ReactNode;
   onClick: (e: MouseEvent) => void;
   disabled?: boolean;
   ref?: RefObject<HTMLButtonElement>;
