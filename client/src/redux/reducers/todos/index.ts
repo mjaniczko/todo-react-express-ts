@@ -3,11 +3,11 @@ import { Reducer } from 'redux';
 import { TodoActions, TodoActionTypes } from '../../actions/todos/todos-actions';
 
 interface IInitialState {
-  todosList: ITodo[];
+  todoList: ITodo[];
 }
 
 const INITIAL_STATE: IInitialState = {
-  todosList: [],
+  todoList: [],
 };
 
 const todosReducer: Reducer<IInitialState, TodoActions> = (
@@ -18,25 +18,26 @@ const todosReducer: Reducer<IInitialState, TodoActions> = (
     case TodoActionTypes.FETCH_TODOS:
       return {
         ...state,
-        todosList: action.payload,
+        todoList: action.payload,
       };
     case TodoActionTypes.DELETE_TODO:
       return {
         ...state,
-        todosList: state.todosList.filter((todo: ITodo) => todo._id !== action.payload),
+        todoList: state.todoList.filter((todo: ITodo) => todo._id !== action.payload),
       };
     case TodoActionTypes.CREATE_TODO:
       return {
         ...state,
-        todosList: [...state.todosList, action.payload],
+        todoList: [...state.todoList, action.payload],
       };
     case TodoActionTypes.UPDATE_TODO:
-      const arrayIndex = state.todosList.findIndex((el: ITodo) => el._id === action.payload._id);
-      let newArray = [...state.todosList];
-      newArray[arrayIndex] = action.payload;
       return {
         ...state,
-        todosList: [...newArray],
+        todoList: state.todoList.map((t) => (t._id === action.payload._id ? action.payload : t)),
+      };
+    case TodoActionTypes.RESET_TODOS:
+      return {
+        todoList: [],
       };
     default:
       return state;

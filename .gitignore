@@ -2,4 +2,8 @@ node_modules
 
 client/node_modules
 
-config.env
+server/config.env
+
+server/yarn-error.log
+
+client/.eslintcache

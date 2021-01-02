@@ -2,7 +2,8 @@ import { MouseEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { logout } from './../redux/actions/auth/auth-actions';
+import { logout } from '../redux/actions/auth/auth-actions';
+import { resetTodoAction } from '../redux/actions/todos/todos-actions';
 
 const Header = () => {
   const history = useHistory();
@@ -11,12 +12,13 @@ const Header = () => {
   const handleLogout = (e: MouseEvent) => {
     e.preventDefault();
     dispatch(logout());
+    dispatch(resetTodoAction());
     history.push('/');
   };
 
   return (
     <div>
-      <button onClick={(e: MouseEvent) => handleLogout(e)}>Logout</button>
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };

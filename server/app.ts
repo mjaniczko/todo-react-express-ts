@@ -1,18 +1,16 @@
 import cors from 'cors';
-import express, { Express } from 'express';
+import express from 'express';
 import bodyParser from 'body-parser';
 import todoRouter from './routes/todo';
 import userRouter from './routes/user';
 
-const app: Express = express();
+const app = express();
 app.use(cors());
 
 const jsonParser = bodyParser.json();
 
-// Test middleware
 app.use((req: any, _res, next) => {
   req.requestTime = new Date().toISOString();
-  // console.log(req.headers);
   next();
 });
 

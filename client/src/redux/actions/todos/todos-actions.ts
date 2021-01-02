@@ -8,6 +8,7 @@ export enum TodoActionTypes {
   CREATE_TODO = 'CREATE_TODO',
   DELETE_TODO = 'DELETE_TODO',
   UPDATE_TODO = 'UPDATE_TODO',
+  RESET_TODOS = 'RESET_TODOS',
 }
 
 interface FetchTodos {
@@ -22,7 +23,7 @@ interface CreateTodo {
 
 interface DeleteTodo {
   type: TodoActionTypes.DELETE_TODO;
-  payload: string;
+  payload: ITodo['_id'];
 }
 
 interface UpdateTodo {
@@ -30,7 +31,11 @@ interface UpdateTodo {
   payload: ITodo;
 }
 
-export type TodoActions = FetchTodos | CreateTodo | DeleteTodo | UpdateTodo;
+interface ResetTodos {
+  type: TodoActionTypes.RESET_TODOS;
+}
+
+export type TodoActions = FetchTodos | CreateTodo | DeleteTodo | UpdateTodo | ResetTodos;
 
 export const fetchTodosAction = (todos: ITodo[]) => ({
   type: TodoActionTypes.FETCH_TODOS,
@@ -42,7 +47,7 @@ export const createTodoAction = (todo: ITodo) => ({
   payload: todo,
 });
 
-export const deleteTodoAction = (id: string) => ({
+export const deleteTodoAction = (id: ITodo['_id']) => ({
   type: TodoActionTypes.DELETE_TODO,
   payload: id,
 });
@@ -50,6 +55,10 @@ export const deleteTodoAction = (id: string) => ({
 export const updateTodoAction = (todo: ITodo) => ({
   type: TodoActionTypes.UPDATE_TODO,
   payload: todo,
+});
+
+export const resetTodoAction = () => ({
+  type: TodoActionTypes.RESET_TODOS,
 });
 
 export const fetchTodos = (userId: string) => {

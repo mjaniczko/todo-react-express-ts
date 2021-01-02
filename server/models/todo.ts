@@ -20,10 +20,6 @@ const todoSchema: Schema = new Schema({
     ref: 'User',
     required: [true, 'Todo must belong to a user.'],
   },
-  // createdAt: {
-  //   type: Date,
-  //   default: Date.now,
-  // },
 });
 
 export default model<ITodo>('Todo', todoSchema);
