@@ -1,21 +1,18 @@
 import { Reducer } from 'redux';
 import { AuthActions, AuthActionTypes } from '../../actions/auth/auth-actions';
 
-interface IInitialState {
-  user: {
-    _id: string;
-    name: string;
-    email: string;
-    token: string;
-  };
+import { User } from '../../../types/user';
+
+interface UserSliceState {
+  user: User;
 }
 
-const INITIAL_STATE: IInitialState = {
+const INITIAL_STATE: UserSliceState = {
   user: {
-    _id: '',
-    name: '',
-    email: '',
-    token: '',
+    _id: localStorage.getItem('_id') || '',
+    name: localStorage.getItem('user') || '',
+    email: localStorage.getItem('email') || '',
+    token: localStorage.getItem('jwt') || '',
   },
 };
 
@@ -29,7 +26,7 @@ const authReducer: Reducer<any, AuthActions> = (state = INITIAL_STATE, action: A
     case AuthActionTypes.LOGOUT:
       return {
         ...state,
-        user: INITIAL_STATE.user,
+        user: action.payload,
       };
     default:
       return state;

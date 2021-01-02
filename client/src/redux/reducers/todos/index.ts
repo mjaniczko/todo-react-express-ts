@@ -35,6 +35,10 @@ const todosReducer: Reducer<IInitialState, TodoActions> = (
         ...state,
         todoList: state.todoList.map((t) => (t._id === action.payload._id ? action.payload : t)),
       };
+    case TodoActionTypes.RESET_TODOS:
+      return {
+        todoList: [],
+      };
     default:
       return state;
   }
