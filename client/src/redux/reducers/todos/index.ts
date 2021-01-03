@@ -1,4 +1,4 @@
-import { ITodo } from '../../../utils/interfaces';
+import { ITodo } from '../../../interfaces/todo';
 import { Reducer } from 'redux';
 import { TodoActions, TodoActionTypes } from '../../actions/todos/todos-actions';
 

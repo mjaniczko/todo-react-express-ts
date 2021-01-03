@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Dispatch } from 'redux';
 
-import { ITodo } from '../../../utils/interfaces';
+import { ITodo } from '../../../interfaces/todo';
 
 export enum TodoActionTypes {
   FETCH_TODOS = 'FETCH_TODOS',

@@ -11,7 +11,7 @@ export enum AuthActionTypes {
 
 interface Login {
   type: AuthActionTypes.LOGIN;
-  payload: string;
+  payload: User;
 }
 
 interface Logout {
@@ -26,12 +26,7 @@ export const loginAction = (user: User) => ({
   payload: user,
 });
 
-export const logoutAction = (user: {
-  token: string;
-  name: string;
-  email: string;
-  _id: string;
-}) => ({
+export const logoutAction = (user: User) => ({
   type: AuthActionTypes.LOGOUT,
   payload: user,
 });

@@ -16,7 +16,10 @@ const INITIAL_STATE: UserSliceState = {
   },
 };
 
-const authReducer: Reducer<any, AuthActions> = (state = INITIAL_STATE, action: AuthActions) => {
+const authReducer: Reducer<UserSliceState, AuthActions> = (
+  state = INITIAL_STATE,
+  action: AuthActions
+) => {
   switch (action.type) {
     case AuthActionTypes.LOGIN:
       return {

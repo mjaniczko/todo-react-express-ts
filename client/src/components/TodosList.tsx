@@ -3,7 +3,7 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 
 import Button from './UI/Button/Button';
 import { RootState } from '../redux/store';
-import { ITodo } from './../utils/interfaces';
+import { ITodo } from '../interfaces/todo';
 import { fetchTodos, deleteTodo, updateTodo } from './../redux/actions/todos/todos-actions';
 
 const TodosList = () => {
