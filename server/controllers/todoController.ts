@@ -1,31 +1,24 @@
-import { Response, Request } from 'express';
-import { ITodo } from '../types/todo';
-import Todo from '../models/todo';
+import { Response } from 'express';
 
-declare module 'express' {
-  interface Request {
-    myProperty: string;
-  }
-}
+import { ITodo } from '../types/todo';
+import { Todo } from '../models/todo';
 
 const getTodos = async (req: any, res: Response): Promise<void> => {
   try {
-    const todos = await Todo.find({ user: req.query.user });
-
+    const todos = await Todo.find({ user: req.user._id });
     res.status(200).json({ todos });
   } catch (error) {
-    throw error;
+    res.status(400).json({ error });
   }
 };
 
-const createTodo = async (req: Request, res: Response): Promise<void> => {
+const createTodo = async (req: any, res: Response): Promise<void> => {
   try {
-    const body = req.body as Pick<ITodo, 'name' | 'description' | 'status' | 'user'>;
+    const body = req.body;
     const todo = new Todo({
       name: body.name,
       description: body.description,
-      status: body.status,
-      user: body.user,
+      user: req.user._id,
     });
 
     const newTodo = await todo.save();
@@ -36,26 +29,40 @@ const createTodo = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const deleteTodo = async (req: Request, res: Response): Promise<void> => {
+const deleteTodo = async (req: any, res: Response): Promise<void> => {
   try {
-    const deletedTodo: ITodo | null = await Todo.findByIdAndRemove(req.params.id);
-    res.status(200).json({
-      message: 'Todo deleted',
-      todo: deletedTodo,
-    });
+    const todos = await Todo.find({ user: req.user._id });
+
+    if (todos.filter((t) => t.id === req.params.id).length < 1) {
+      res.status(404).json({ message: 'Todo with given id was not found for logged in user.' });
+    } else {
+      const deletedTodo: ITodo | null = await Todo.findByIdAndRemove(req.params.id);
+      res.status(200).json({
+        message: 'Todo deleted',
+        todo: deletedTodo,
+      });
+    }
   } catch (err) {
     console.log(err);
   }
 };
 
-const updateTodo = async (req: Request, res: Response): Promise<void> => {
+const updateTodo = async (req: any, res: Response): Promise<void> => {
   try {
-    const updatedTodo: ITodo | null = await Todo.findOneAndUpdate({ _id: req.params.id }, req.body);
-    res.status(200).json({
-      message: 'Todo updated successfully',
-      status: 'success',
-      updatedTodo,
-    });
+    const todos = await Todo.find({ user: req.user._id });
+
+    if (todos.filter((t) => t.id === req.params.id).length < 1) {
+      res.status(404).json({ message: 'Todo with given id was not found for logged in user.' });
+    } else {
+      const updatedTodo: ITodo | null = await Todo.findOneAndUpdate(
+        { _id: req.params.id },
+        req.body
+      );
+      res.status(200).json({
+        message: 'Todo updated successfully',
+        updatedTodo,
+      });
+    }
   } catch (err) {
     console.log(err);
   }

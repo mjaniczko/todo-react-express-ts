@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-const LandingPage = () => {
+export const LandingPage = () => {
   return (
     <div>
       <h1>Todo App</h1>
@@ -10,5 +10,3 @@ const LandingPage = () => {
     </div>
   );
 };
-
-export default LandingPage;

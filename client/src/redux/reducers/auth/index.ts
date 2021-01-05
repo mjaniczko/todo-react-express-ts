@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 import { AuthActions, AuthActionTypes } from '../../actions/auth/auth-actions';
 
-import { User } from '../../../types/user';
+import { User } from '../../../types/interfaces';
 
 interface UserSliceState {
   user: User;
@@ -9,14 +9,14 @@ interface UserSliceState {
 
 const INITIAL_STATE: UserSliceState = {
   user: {
-    _id: localStorage.getItem('_id') || '',
-    name: localStorage.getItem('user') || '',
-    email: localStorage.getItem('email') || '',
+    _id: '',
+    name: '',
+    email: '',
     token: localStorage.getItem('jwt') || '',
   },
 };
 
-const authReducer: Reducer<UserSliceState, AuthActions> = (
+export const authReducer: Reducer<UserSliceState, AuthActions> = (
   state = INITIAL_STATE,
   action: AuthActions
 ) => {
@@ -29,11 +29,9 @@ const authReducer: Reducer<UserSliceState, AuthActions> = (
     case AuthActionTypes.LOGOUT:
       return {
         ...state,
-        user: action.payload,
+        user: INITIAL_STATE.user,
       };
     default:
       return state;
   }
 };
-
-export default authReducer;

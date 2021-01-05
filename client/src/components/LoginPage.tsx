@@ -2,12 +2,12 @@ import { useState, ChangeEvent, MouseEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import Input from './UI/Input/Input';
-import Button from './UI/Button/Button';
+import { Input } from './UI/Input/Input';
+import { Button } from './UI/Button/Button';
 import { hasJWTToken } from './../utils/auth';
 import { login } from './../redux/actions/auth/auth-actions';
 
-const LoginPage = () => {
+export const LoginPage = () => {
   const [auth, setAuth] = useState({
     email: '',
     password: '',
@@ -55,5 +55,3 @@ const LoginPage = () => {
     </div>
   );
 };
-
-export default LoginPage;

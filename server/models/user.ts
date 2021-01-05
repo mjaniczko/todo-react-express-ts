@@ -36,12 +36,9 @@ userSchema.pre<IUser & Document>('save', async function (next) {
   // Only run this function if password was actually modified
   if (!this.isModified('password')) return next();
 
-  // Hash the password
   this.password = await bcrypt.hash(this.password, 12);
   this.passwordConfirm = undefined;
   next();
 });
 
-const User = model<IUser & Document>('User', userSchema);
-
-export default User;
+export const User = model<IUser & Document>('User', userSchema);

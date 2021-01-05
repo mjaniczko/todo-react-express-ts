@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Dispatch } from 'redux';
 
-import { ITodo } from '../../../interfaces/todo';
+import { ITodo } from '../../../types/interfaces';
 
 export enum TodoActionTypes {
   FETCH_TODOS = 'FETCH_TODOS',
@@ -61,11 +61,11 @@ export const resetTodoAction = () => ({
   type: TodoActionTypes.RESET_TODOS,
 });
 
-export const fetchTodos = (userId: string) => {
+export const fetchTodos = (token: string) => {
   return async (dispatch: Dispatch) => {
     try {
       const res = await axios.get('http://localhost:8000/api/v1/todos', {
-        params: { user: userId },
+        params: { token },
       });
       const data = await res.data;
       dispatch(fetchTodosAction(data.todos));
@@ -75,13 +75,16 @@ export const fetchTodos = (userId: string) => {
   };
 };
 
-export const createTodo = (todo: { name: string; description: string }, userId: string) => {
+export const createTodo = (todo: { name: string; description: string }, token: string) => {
   return async (dispatch: Dispatch) => {
     try {
-      const res = await axios.post('http://localhost:8000/api/v1/todos', {
-        ...todo,
-        user: userId,
-      });
+      const res = await axios.post(
+        'http://localhost:8000/api/v1/todos',
+        {
+          ...todo,
+        },
+        { params: { token } }
+      );
       const data = await res.data;
       dispatch(createTodoAction(data.todo));
     } catch (error) {
@@ -90,10 +93,10 @@ export const createTodo = (todo: { name: string; description: string }, userId: 
   };
 };
 
-export const deleteTodo = (id: string) => {
+export const deleteTodo = (id: string, token: string) => {
   return async (dispatch: Dispatch) => {
     try {
-      await axios.delete(`http://localhost:8000/api/v1/todos/${id}`);
+      await axios.delete(`http://localhost:8000/api/v1/todos/${id}`, { params: { token } });
       dispatch(deleteTodoAction(id));
     } catch (error) {
       console.log(error);
@@ -101,16 +104,13 @@ export const deleteTodo = (id: string) => {
   };
 };
 
-export const updateTodo = (todo: ITodo) => {
+export const updateTodo = (todo: ITodo, token: string) => {
   return async (dispatch: Dispatch) => {
     try {
-      const newStatus = !todo.status;
-      await axios.put(`http://localhost:8000/api/v1/todos/${todo._id}`, {
-        ...todo,
-        status: newStatus,
+      await axios.put(`http://localhost:8000/api/v1/todos/${todo._id}`, todo, {
+        params: { token },
       });
-
-      dispatch(updateTodoAction({ ...todo, status: newStatus }));
+      dispatch(updateTodoAction(todo));
     } catch (err) {
       console.log(err);
     }

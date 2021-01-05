@@ -1,8 +1,8 @@
-import Header from './Header';
-import TodoForm from './TodoForm';
-import TodosList from './TodosList';
+import { Header } from './Header';
+import { TodoForm } from './TodoForm';
+import { TodosList } from './TodosList';
 
-const TodoPage = () => {
+export const TodoPage = () => {
   return (
     <>
       <Header />
@@ -11,5 +11,3 @@ const TodoPage = () => {
     </>
   );
 };
-
-export default TodoPage;

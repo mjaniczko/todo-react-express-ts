@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Dispatch } from 'redux';
 
-import { User } from '../../../types/user';
+import { User } from '../../../types/interfaces';
 import { setLocalStorageUserData, removeLocalStorageUserData } from '../../../utils/auth';
 
 export enum AuthActionTypes {
@@ -16,7 +16,6 @@ interface Login {
 
 interface Logout {
   type: AuthActionTypes.LOGOUT;
-  payload: User;
 }
 
 export type AuthActions = Login | Logout;
@@ -26,17 +25,16 @@ export const loginAction = (user: User) => ({
   payload: user,
 });
 
-export const logoutAction = (user: User) => ({
+export const logoutAction = () => ({
   type: AuthActionTypes.LOGOUT,
-  payload: user,
 });
 
 export const login = ({ email, password }: { email: string; password: string }) => {
   return async (dispatch: Dispatch) => {
     try {
       const res = await axios.post('http://localhost:8000/api/v1/user/login', { email, password });
-      const data = await res.data;
-      setLocalStorageUserData(data.user);
+      const data = res.data;
+      setLocalStorageUserData(data.token);
       dispatch(loginAction({ token: data.token, ...data.user }));
     } catch (err) {
       console.log(err.message);
@@ -47,9 +45,8 @@ export const login = ({ email, password }: { email: string; password: string }) 
 export const logout = () => {
   return async (dispatch: Dispatch) => {
     try {
-      const user = { email: '', token: '', name: '', _id: '' };
       removeLocalStorageUserData();
-      dispatch(logoutAction(user));
+      dispatch(logoutAction());
     } catch (err) {
       console.log(err.message);
     }

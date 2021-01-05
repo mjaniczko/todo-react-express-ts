@@ -2,29 +2,29 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Response, Request } from 'express';
 
-import User from '../models/user';
+import { User } from '../models/user';
 
 const createUser = async (req: Request, res: Response): Promise<Response> => {
   const { name, email, password, passwordConfirm } = req.body;
 
-  let user = await User.findOne({ email });
+  const user = await User.findOne({ email });
 
   if (user) return res.status(400).send('That user already exisits!');
 
-  user = new User({ name, email, password, passwordConfirm });
-  await user.save();
+  const newUser = new User({ name, email, password, passwordConfirm });
+  await newUser.save();
 
-  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET!);
+  const token = jwt.sign({ _id: newUser._id }, process.env.JWT_SECRET!);
 
   return res
     .status(201)
     .header('x-auth-token', token)
-    .json({ status: 'success', message: 'Created new user', user });
+    .json({ message: 'Created new user', user: newUser });
 };
 
 const login = async (req: Request, res: Response): Promise<Response> => {
   const { email, password } = req.body;
-  let user = await User.findOne({ email }).select('+password');
+  const user = await User.findOne({ email }).select('+password');
 
   if (!user) return res.status(400).send('Incorrect email or password.');
 
@@ -34,7 +34,6 @@ const login = async (req: Request, res: Response): Promise<Response> => {
   const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET!);
 
   return res.status(200).json({
-    status: 'success',
     message: 'Loged in',
     token,
     user: { _id: user._id, name: user.name, email: user.email },

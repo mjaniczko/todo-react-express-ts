@@ -22,4 +22,4 @@ const todoSchema: Schema = new Schema({
   },
 });
 
-export default model<ITodo>('Todo', todoSchema);
+export const Todo = model<ITodo>('Todo', todoSchema);

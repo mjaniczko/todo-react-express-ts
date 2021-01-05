@@ -1,4 +1,4 @@
-import { ITodo } from '../../../interfaces/todo';
+import { ITodo } from '../../../types/interfaces';
 import { Reducer } from 'redux';
 import { TodoActions, TodoActionTypes } from '../../actions/todos/todos-actions';
 
@@ -10,7 +10,7 @@ const INITIAL_STATE: IInitialState = {
   todoList: [],
 };
 
-const todosReducer: Reducer<IInitialState, TodoActions> = (
+export const todosReducer: Reducer<IInitialState, TodoActions> = (
   state = INITIAL_STATE,
   action: TodoActions
 ) => {
@@ -43,5 +43,3 @@ const todosReducer: Reducer<IInitialState, TodoActions> = (
       return state;
   }
 };
-
-export default todosReducer;

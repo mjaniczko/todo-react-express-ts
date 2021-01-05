@@ -6,7 +6,7 @@ interface PrivateRouteProps extends RouteProps {
   component: (props: any) => JSX.Element;
 }
 
-const PrivateRoute = ({ component: Component, ...rest }: PrivateRouteProps) => {
+export const PrivateRoute = ({ component: Component, ...rest }: PrivateRouteProps) => {
   return (
     <Route
       {...rest}
@@ -14,5 +14,3 @@ const PrivateRoute = ({ component: Component, ...rest }: PrivateRouteProps) => {
     />
   );
 };
-
-export default PrivateRoute;

@@ -11,7 +11,16 @@ interface InputProps {
   className?: string;
 }
 
-const Input = ({ name, value, placeholder, ref, type, error, onChange, className }: InputProps) => {
+export const Input = ({
+  name,
+  value,
+  placeholder,
+  ref,
+  type,
+  error,
+  onChange,
+  className,
+}: InputProps) => {
   return (
     <div>
       <input
@@ -27,5 +36,3 @@ const Input = ({ name, value, placeholder, ref, type, error, onChange, className
     </div>
   );
 };
-
-export default Input;

@@ -4,6 +4,7 @@ client/node_modules
 
 server/config.env
 
+client/yarn-error.log
 server/yarn-error.log
 
 client/.eslintcache

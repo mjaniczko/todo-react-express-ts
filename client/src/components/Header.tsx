@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { logout } from '../redux/actions/auth/auth-actions';
 import { resetTodoAction } from '../redux/actions/todos/todos-actions';
 
-const Header = () => {
+export const Header = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -22,5 +22,3 @@ const Header = () => {
     </div>
   );
 };
-
-export default Header;
