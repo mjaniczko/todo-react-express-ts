@@ -13,15 +13,15 @@ export const TodosList = () => {
   const todos = useSelector((state: RootState) => state.todosState.todoList);
 
   useEffect(() => {
-    dispatch(fetchTodos(token));
+    dispatch(fetchTodos());
   }, [token, dispatch]);
 
   const handleDeleteTodo = (id: string) => {
-    dispatch(deleteTodo(id, token));
+    dispatch(deleteTodo(id));
   };
 
   const toggleTodoStatus = (todo: ITodo) => {
-    dispatch(updateTodo({ ...todo, status: !todo.status }, token));
+    dispatch(updateTodo({ ...todo, status: !todo.status }));
   };
 
   return (
