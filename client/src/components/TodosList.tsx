@@ -13,7 +13,9 @@ export const TodosList = () => {
   const todos = useSelector((state: RootState) => state.todosState.todoList);
 
   useEffect(() => {
-    dispatch(fetchTodos());
+    if (token.length > 0) {
+      dispatch(fetchTodos());
+    }
   }, [token, dispatch]);
 
   const handleDeleteTodo = (id: string) => {

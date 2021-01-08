@@ -9,7 +9,6 @@ interface UserSliceState {
 
 const INITIAL_STATE: UserSliceState = {
   user: {
-    _id: '',
     name: '',
     email: '',
     token: localStorage.getItem('jwt') || '',
@@ -26,6 +25,12 @@ export const authReducer: Reducer<UserSliceState, AuthActions> = (
         ...state,
         user: action.payload,
       };
+    case AuthActionTypes.GET_ME:
+      return {
+        ...state,
+        user: action.payload,
+      };
+
     case AuthActionTypes.LOGOUT:
       return {
         ...state,

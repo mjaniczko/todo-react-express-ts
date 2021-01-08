@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Dispatch } from 'redux';
 
 import { ITodo } from '../../../types/interfaces';
-import { localStorageUserToken } from '../../../utils/auth';
+import { getLocalStorageUserToken } from '../../../utils/auth';
 
 export enum TodoActionTypes {
   FETCH_TODOS = 'FETCH_TODOS',
@@ -36,8 +36,6 @@ interface ResetTodos {
   type: TodoActionTypes.RESET_TODOS;
 }
 
-const token = localStorageUserToken;
-
 export type TodoActions = FetchTodos | CreateTodo | DeleteTodo | UpdateTodo | ResetTodos;
 
 export const fetchTodosAction = (todos: ITodo[]) => ({
@@ -67,6 +65,7 @@ export const resetTodoAction = () => ({
 export const fetchTodos = () => {
   return async (dispatch: Dispatch) => {
     try {
+      const token = getLocalStorageUserToken();
       const res = await axios.get('http://localhost:8000/api/v1/todos', {
         params: { token },
       });
@@ -81,6 +80,7 @@ export const fetchTodos = () => {
 export const createTodo = (todo: { name: string; description: string }) => {
   return async (dispatch: Dispatch) => {
     try {
+      const token = getLocalStorageUserToken();
       const res = await axios.post(
         'http://localhost:8000/api/v1/todos',
         {
@@ -99,6 +99,7 @@ export const createTodo = (todo: { name: string; description: string }) => {
 export const deleteTodo = (id: string) => {
   return async (dispatch: Dispatch) => {
     try {
+      const token = getLocalStorageUserToken();
       await axios.delete(`http://localhost:8000/api/v1/todos/${id}`, { params: { token } });
       dispatch(deleteTodoAction(id));
     } catch (error) {
@@ -110,6 +111,7 @@ export const deleteTodo = (id: string) => {
 export const updateTodo = (todo: ITodo) => {
   return async (dispatch: Dispatch) => {
     try {
+      const token = getLocalStorageUserToken();
       await axios.put(`http://localhost:8000/api/v1/todos/${todo._id}`, todo, {
         params: { token },
       });

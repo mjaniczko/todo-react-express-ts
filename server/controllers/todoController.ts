@@ -2,8 +2,9 @@ import { Response } from 'express';
 
 import { ITodo } from '../types/todo';
 import { Todo } from '../models/todo';
+import { RequestWithUser } from '../types/shared';
 
-const getTodos = async (req: any, res: Response): Promise<void> => {
+const getTodos = async (req: RequestWithUser, res: Response): Promise<void> => {
   try {
     const todos = await Todo.find({ user: req.user._id });
     res.status(200).json({ todos });
@@ -12,7 +13,7 @@ const getTodos = async (req: any, res: Response): Promise<void> => {
   }
 };
 
-const createTodo = async (req: any, res: Response): Promise<void> => {
+const createTodo = async (req: RequestWithUser, res: Response): Promise<void> => {
   try {
     const body = req.body;
     const todo = new Todo({
@@ -29,7 +30,7 @@ const createTodo = async (req: any, res: Response): Promise<void> => {
   }
 };
 
-const deleteTodo = async (req: any, res: Response): Promise<void> => {
+const deleteTodo = async (req: RequestWithUser, res: Response): Promise<void> => {
   try {
     const todos = await Todo.find({ user: req.user._id });
 
@@ -47,7 +48,7 @@ const deleteTodo = async (req: any, res: Response): Promise<void> => {
   }
 };
 
-const updateTodo = async (req: any, res: Response): Promise<void> => {
+const updateTodo = async (req: RequestWithUser, res: Response): Promise<void> => {
   try {
     const todos = await Todo.find({ user: req.user._id });
 

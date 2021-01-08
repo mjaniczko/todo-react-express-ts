@@ -9,10 +9,5 @@ app.use(cors());
 
 const jsonParser = bodyParser.json();
 
-app.use((req: any, _res, next) => {
-  req.requestTime = new Date().toISOString();
-  next();
-});
-
 app.use('/api/v1/todos', jsonParser, todoRouter);
 app.use('/api/v1/user', jsonParser, userRouter);

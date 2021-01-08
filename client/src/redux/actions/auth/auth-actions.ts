@@ -2,26 +2,40 @@ import axios from 'axios';
 import { Dispatch } from 'redux';
 
 import { User } from '../../../types/interfaces';
-import { setLocalStorageUserData, removeLocalStorageUserData } from '../../../utils/auth';
+import {
+  setLocalStorageUserData,
+  removeLocalStorageUserData,
+  getLocalStorageUserToken,
+} from '../../../utils/auth';
 
 export enum AuthActionTypes {
   LOGIN = 'LOGIN',
   LOGOUT = 'LOGOUT',
+  GET_ME = 'GET_ME',
 }
 
 interface Login {
   type: AuthActionTypes.LOGIN;
   payload: User;
 }
-
 interface Logout {
   type: AuthActionTypes.LOGOUT;
 }
 
-export type AuthActions = Login | Logout;
+interface GetMe {
+  type: AuthActionTypes.GET_ME;
+  payload: User;
+}
+
+export type AuthActions = Login | Logout | GetMe;
 
 export const loginAction = (user: User) => ({
   type: AuthActionTypes.LOGIN,
+  payload: user,
+});
+
+export const getMeAction = (user: User) => ({
+  type: AuthActionTypes.GET_ME,
   payload: user,
 });
 
@@ -47,6 +61,20 @@ export const logout = () => {
     try {
       removeLocalStorageUserData();
       dispatch(logoutAction());
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+};
+
+export const getMe = () => {
+  return async (dispatch: Dispatch) => {
+    try {
+      const token = getLocalStorageUserToken();
+      const res = await axios.get('http://localhost:8000/api/v1/user/me', {
+        params: { token },
+      });
+      dispatch(getMeAction({ ...res.data, token }));
     } catch (err) {
       console.log(err.message);
     }

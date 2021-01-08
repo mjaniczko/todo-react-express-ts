@@ -16,4 +16,4 @@ export const removeLocalStorageUserData = () => {
   localStorage.removeItem(TOKEN_KEY);
 };
 
-export const localStorageUserToken = localStorage.getItem(TOKEN_KEY);
+export const getLocalStorageUserToken = () => localStorage.getItem(TOKEN_KEY);

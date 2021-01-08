@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { Response, Request } from 'express';
 
 import { User } from '../models/user';
+import { RequestWithUser } from '../types/shared';
 
 const createUser = async (req: Request, res: Response): Promise<Response> => {
   const { name, email, password, passwordConfirm } = req.body;
@@ -36,8 +37,27 @@ const login = async (req: Request, res: Response): Promise<Response> => {
   return res.status(200).json({
     message: 'Loged in',
     token,
-    user: { _id: user._id, name: user.name, email: user.email },
+    user: { name: user.name, email: user.email },
   });
 };
 
-export { createUser, login };
+const getMe = async (req: RequestWithUser, res: Response): Promise<void> => {
+  const token = req.query.token as string;
+
+  if (token === '' || token === undefined) {
+    res.status(401).json({ message: 'You are not logged in! Please log in to get access.' });
+  } else {
+    // Add try catch here
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+    const currentUser = await User.findById(decoded);
+
+    if (!currentUser) {
+      res.status(401).json({ message: 'The user belonging to this token does not longer exist.' });
+    } else {
+      const user = await User.findOne({ _id: currentUser._id });
+      res.status(200).json({ name: user!.name, email: user!.email });
+    }
+  }
+};
+
+export { createUser, login, getMe };
