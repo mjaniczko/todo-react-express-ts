@@ -91,7 +91,8 @@ export const createTodo = (todo: { name: string; description: string }) => {
       const data = await res.data;
       dispatch(createTodoAction(data.todo));
     } catch (error) {
-      console.log(error);
+      console.log(error.response);
+      console.log(error.message);
     }
   };
 };

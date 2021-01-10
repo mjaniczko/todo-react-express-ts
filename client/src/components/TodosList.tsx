@@ -9,14 +9,14 @@ import { fetchTodos, deleteTodo, updateTodo } from './../redux/actions/todos/tod
 export const TodosList = () => {
   const dispatch = useDispatch();
 
-  const token = useSelector((state: RootState) => state.auth.user.token);
+  const name = useSelector((state: RootState) => state.auth.user.name);
   const todos = useSelector((state: RootState) => state.todosState.todoList);
 
   useEffect(() => {
-    if (token.length > 0) {
+    if (name.length > 0) {
       dispatch(fetchTodos());
     }
-  }, [token, dispatch]);
+  }, [name, dispatch]);
 
   const handleDeleteTodo = (id: string) => {
     dispatch(deleteTodo(id));
