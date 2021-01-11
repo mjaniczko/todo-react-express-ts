@@ -72,7 +72,9 @@ export const getMe = () => {
     try {
       const token = getLocalStorageUserToken();
       const res = await axios.get('http://localhost:8000/api/v1/user/me', {
-        params: { token },
+        headers: {
+          Authorization: token,
+        },
       });
       dispatch(getMeAction({ ...res.data, token }));
     } catch (err) {

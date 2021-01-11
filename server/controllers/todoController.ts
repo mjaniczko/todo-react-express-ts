@@ -5,7 +5,7 @@ import { Todo } from '../models/todo';
 import { ApiError } from '../utils/ApiError';
 import { RequestWithUser } from '../types/shared';
 
-const getTodos = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+const getTodos = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   try {
     const todos = await Todo.find({ user: req.user._id });
     res.status(200).json({ todos });
@@ -14,11 +14,7 @@ const getTodos = async (req: RequestWithUser, res: Response, next: NextFunction)
   }
 };
 
-const createTodo = async (
-  req: RequestWithUser,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
+const createTodo = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   try {
     const body = req.body;
     const todo = new Todo({
@@ -29,43 +25,34 @@ const createTodo = async (
 
     const newTodo = await todo.save();
 
-    res.status(201).json({ message: 'Todo added', todo: newTodo });
+    res.status(201).json({ todo: newTodo });
   } catch (_) {
     next(ApiError.badRequest('Failed to create todo. Name and description are required.'));
   }
 };
 
-const deleteTodo = async (
-  req: RequestWithUser,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
+const deleteTodo = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   try {
-    const todos = await Todo.find({ user: req.user._id });
+    const todo = await Todo.find({ user: req.user._id, _id: req.params.id });
 
-    if (todos.filter((t) => t.id === req.params.id).length < 1) {
-      next(ApiError.notFound('Todo with given id was not found for logged in user.'));
-    } else {
-      const deletedTodo: ITodo | null = await Todo.findByIdAndRemove(req.params.id);
-      res.status(200).json({
-        message: 'Todo deleted',
-        todo: deletedTodo,
-      });
+    if (!todo) {
+      return next(ApiError.notFound('Todo with given id was not found for logged in user.'));
     }
+    const deletedTodo: ITodo | null = await Todo.findByIdAndRemove(req.params.id);
+    res.status(200).json({
+      todo: deletedTodo,
+    });
+    res.status(200);
   } catch (_) {
     console.log('Filed to delete todo');
   }
 };
 
-const updateTodo = async (
-  req: RequestWithUser,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
+const updateTodo = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   try {
-    const todos = await Todo.find({ user: req.user._id });
+    const todos = await Todo.find({ user: req.user._id, _id: req.params.id });
 
-    if (todos.filter((t) => t.id === req.params.id).length < 1) {
+    if (!todos) {
       next(ApiError.notFound('Todo with given id was not found for logged in user.'));
     } else {
       const updatedTodo: ITodo | null = await Todo.findOneAndUpdate(
@@ -73,7 +60,6 @@ const updateTodo = async (
         req.body
       );
       res.status(200).json({
-        message: 'Todo updated successfully',
         updatedTodo,
       });
     }

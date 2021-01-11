@@ -4,9 +4,9 @@ import { Response, Request, NextFunction } from 'express';
 
 import { User } from '../models/user';
 import { ApiError } from '../utils/ApiError';
-import { RequestWithUser } from '../types/shared';
+// import { RequestWithUser } from '../types/shared';
 
-const createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const createUser = async (req: Request, res: Response, next: NextFunction) => {
   const { name, email, password, passwordConfirm } = req.body;
 
   const user = await User.findOne({ email });
@@ -20,14 +20,15 @@ const createUser = async (req: Request, res: Response, next: NextFunction): Prom
 
   const token = jwt.sign({ _id: newUser._id }, process.env.JWT_SECRET!);
 
-  res
-    .status(201)
-    .header('x-auth-token', token)
-    .json({ message: 'Created new user', user: newUser });
+  res.status(201).header('x-auth-token', token).json({ user: newUser });
 };
 
-const login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const login = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
+  if (!email || !password) {
+    return next(ApiError.badRequest('Please provide email and password!'));
+  }
+
   const user = await User.findOne({ email }).select('+password');
 
   if (!user) {
@@ -42,14 +43,13 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
   const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET!);
 
   res.status(200).json({
-    message: 'Loged in',
     token,
     user: { name: user.name, email: user.email },
   });
 };
 
-const getMe = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
-  const token = req.query.token as string;
+const getMe = async (req: Request, res: Response, next: NextFunction) => {
+  const token = req.headers.authorization as string;
 
   if (token === '' || token === undefined) {
     return next(ApiError.notAuthorized('You are not logged in! Please log in to get access.'));

@@ -67,7 +67,9 @@ export const fetchTodos = () => {
     try {
       const token = getLocalStorageUserToken();
       const res = await axios.get('http://localhost:8000/api/v1/todos', {
-        params: { token },
+        headers: {
+          Authorization: token,
+        },
       });
       const data = await res.data;
       dispatch(fetchTodosAction(data.todos));
@@ -86,7 +88,11 @@ export const createTodo = (todo: { name: string; description: string }) => {
         {
           ...todo,
         },
-        { params: { token } }
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
       );
       const data = await res.data;
       dispatch(createTodoAction(data.todo));
@@ -101,7 +107,11 @@ export const deleteTodo = (id: string) => {
   return async (dispatch: Dispatch) => {
     try {
       const token = getLocalStorageUserToken();
-      await axios.delete(`http://localhost:8000/api/v1/todos/${id}`, { params: { token } });
+      await axios.delete(`http://localhost:8000/api/v1/todos/${id}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
       dispatch(deleteTodoAction(id));
     } catch (error) {
       console.log(error);
@@ -114,7 +124,9 @@ export const updateTodo = (todo: ITodo) => {
     try {
       const token = getLocalStorageUserToken();
       await axios.put(`http://localhost:8000/api/v1/todos/${todo._id}`, todo, {
-        params: { token },
+        headers: {
+          Authorization: token,
+        },
       });
       dispatch(updateTodoAction(todo));
     } catch (err) {
