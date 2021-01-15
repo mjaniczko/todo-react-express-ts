@@ -2,45 +2,64 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import { User } from '../models/user';
-import { ApiError } from '../utils/ApiError';
+import { ErrorHandler } from '../utils/ErrorHandler';
 
-export const getUser = async (decoded: any) => {
+export const createUser = async (
+  name: string,
+  password: string,
+  email: string,
+  passwordConfirm: string
+) => {
   try {
-    const currentUser = await User.findById(decoded).select('-__v');
-
-    if (!currentUser) {
-      return ApiError.notFound('The user belonging to this token does not longer exist.');
+    const user = await User.findOne({ email });
+    if (user) {
+      throw new ErrorHandler(404, 'User with given email already exist');
     }
-    const user = await User.findOne({ _id: currentUser._id });
-    return user;
-  } catch (err) {
-    console.log(err);
-    return ApiError.internal('Failed to get user');
+
+    const newUser = new User({ name, email, password, passwordConfirm });
+    await newUser.save();
+
+    const token = jwt.sign({ _id: newUser._id }, process.env.JWT_SECRET!);
+    return { token, newUser };
+  } catch {
+    throw new ErrorHandler(500, 'Failed to create user');
   }
 };
 
-export const loginUser = async (body: any) => {
+export const getUser = async (userId: string) => {
   try {
-    const { email, password } = body;
+    const currentUser = await User.findById(userId).select('-__v');
+
+    if (!currentUser) {
+      throw new ErrorHandler(404, 'The user belonging to this token does not longer exist.');
+    }
+    const user = await User.findOne({ _id: currentUser._id });
+    return user;
+  } catch {
+    throw new ErrorHandler(500, 'Failed to get user');
+  }
+};
+
+export const loginUser = async (email: string, password: string) => {
+  try {
     if (!email || !password) {
-      return ApiError.badRequest('Please provide email and password!');
+      throw new ErrorHandler(404, 'Please provide email and password!');
     }
 
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
-      return ApiError.notAuthorized('Incorret email or password');
+      throw new ErrorHandler(404, 'Incorret email or password');
     }
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
-      return ApiError.notAuthorized('Incorret email or password');
+      throw new ErrorHandler(404, 'Incorret email or password');
     }
 
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET!);
 
     return { user, token };
-  } catch (err) {
-    console.log(err);
-    return ApiError.internal('Failed to login user');
+  } catch {
+    throw new ErrorHandler(500, 'Failed to login user');
   }
 };

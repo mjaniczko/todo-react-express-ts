@@ -1,27 +1,26 @@
 import { Todo } from '../models/todo';
 import { ITodo } from '../types/todo';
-import { ApiError } from '../utils/ApiError';
+import { ErrorHandler } from '../utils/ErrorHandler';
 
 export const getAllTodos = async (userId: string) => {
   try {
     return await Todo.find({ user: userId });
-  } catch (err) {
-    console.log(err);
-    return ApiError.internal('Failed to fetch todos');
+  } catch {
+    throw new ErrorHandler(500, 'Failed to fetch todos');
   }
 };
 
 export const deleteTodo = async (userId: string, todoId: string) => {
   try {
     const todo = await Todo.find({ user: userId, _id: todoId });
+    console.log('todo: ', todo);
     if (todo.length === 0) {
-      return ApiError.notFound('Todo with given id was not found for logged in user.');
+      throw new ErrorHandler(404, 'Todo with given id was not found for logged in user.');
     }
     const deletedTodo: ITodo | null = await Todo.findByIdAndRemove(todoId);
     return deletedTodo;
-  } catch (err) {
-    console.log(err);
-    return ApiError.internal('Failed to fetch todos');
+  } catch {
+    throw new ErrorHandler(500, 'Failed to delete todo');
   }
 };
 
@@ -29,13 +28,12 @@ export const updateTodo = async (userId: string, todoId: string, body: {}) => {
   try {
     const todo = await Todo.find({ user: userId, _id: todoId });
     if (todo.length === 0) {
-      return ApiError.notFound('Todo with given id was not found for logged in user.');
+      throw new ErrorHandler(404, 'Todo with given id was not found for logged in user.');
     }
 
     return await Todo.findOneAndUpdate({ _id: todoId }, body);
-  } catch (err) {
-    console.log(err);
-    return ApiError.internal('Failed to update todos');
+  } catch {
+    throw new ErrorHandler(500, 'Failed to update todos');
   }
 };
 
@@ -49,8 +47,7 @@ export const createTodo = async (userId: string, body: { name: string; descripti
     });
 
     return await todo.save();
-  } catch (err) {
-    console.log(err);
-    return ApiError.internal('Failed to create todos');
+  } catch {
+    throw new ErrorHandler(500, 'Failed to create todo');
   }
 };

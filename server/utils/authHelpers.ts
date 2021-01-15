@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken';
 
-import { ApiError } from './ApiError';
+import { ErrorHandler } from './ErrorHandler';
 
 export const decode = (token: string) => {
   try {
-    return jwt.verify(token, process.env.JWT_SECRET!);
-  } catch (error) {
-    console.log(error);
-    return ApiError.badRequest('Invalid token');
+    const { _id } = jwt.verify(token, process.env.JWT_SECRET!) as { _id: string };
+    return _id;
+  } catch {
+    throw new ErrorHandler(400, 'Failed to verify token.');
   }
 };
