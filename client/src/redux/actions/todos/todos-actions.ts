@@ -73,8 +73,8 @@ export const fetchTodos = () => {
       });
       const data = await res.data;
       dispatch(fetchTodosAction(data.todos));
-    } catch (err) {
-      console.log(err.message);
+    } catch (error) {
+      console.log(error.response);
     }
   };
 };
@@ -98,7 +98,6 @@ export const createTodo = (todo: { name: string; description: string }) => {
       dispatch(createTodoAction(data.todo));
     } catch (error) {
       console.log(error.response);
-      console.log(error.message);
     }
   };
 };
@@ -114,7 +113,7 @@ export const deleteTodo = (id: string) => {
       });
       dispatch(deleteTodoAction(id));
     } catch (error) {
-      console.log(error);
+      console.log(error.response);
     }
   };
 };
@@ -129,8 +128,8 @@ export const updateTodo = (todo: ITodo) => {
         },
       });
       dispatch(updateTodoAction(todo));
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error.response);
     }
   };
 };
