@@ -3,19 +3,21 @@ import { AuthActions, AuthActionTypes } from '../../actions/auth/auth-actions';
 
 import { User } from '../../../types/interfaces';
 
-interface UserSliceState {
+interface UserState {
   user: User;
+  error: string;
 }
 
-const INITIAL_STATE: UserSliceState = {
+const INITIAL_STATE: UserState = {
   user: {
     name: '',
     email: '',
     token: localStorage.getItem('jwt') || '',
   },
+  error: '',
 };
 
-export const authReducer: Reducer<UserSliceState, AuthActions> = (
+export const authReducer: Reducer<UserState, AuthActions> = (
   state = INITIAL_STATE,
   action: AuthActions
 ) => {
@@ -35,6 +37,11 @@ export const authReducer: Reducer<UserSliceState, AuthActions> = (
       return {
         ...state,
         user: INITIAL_STATE.user,
+      };
+    case AuthActionTypes.AUTH_ERROR:
+      return {
+        ...state,
+        error: action.payload,
       };
     default:
       return state;

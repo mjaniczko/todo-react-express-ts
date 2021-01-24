@@ -1,12 +1,14 @@
 import { useState, ChangeEvent, MouseEvent } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Input } from './UI/Input/Input';
+import { RootState } from '../redux/store';
 import { Button } from './UI/Button/Button';
 import { createTodo } from '../redux/actions/todos/todos-actions';
 
 export const TodoForm = () => {
   const [newTodo, setNewTodo] = useState({ name: '', description: '' });
+  const todosError = useSelector((state: RootState) => state.todosState.error);
 
   const dispatch = useDispatch();
 
@@ -40,6 +42,7 @@ export const TodoForm = () => {
           placeholder='Todo description'
           onChange={handleChange}
         />
+        {todosError.length > 0 && <span>{todosError}</span>}
         <Button onClick={createNewTodo} type='submit'>
           Submit new todo
         </Button>
