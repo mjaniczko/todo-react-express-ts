@@ -2,15 +2,17 @@ import { ITodo } from '../../../types/interfaces';
 import { Reducer } from 'redux';
 import { TodoActions, TodoActionTypes } from '../../actions/todos/todos-actions';
 
-interface IInitialState {
+interface TodoState {
   todoList: ITodo[];
+  error: string;
 }
 
-const INITIAL_STATE: IInitialState = {
+const INITIAL_STATE: TodoState = {
   todoList: [],
+  error: '',
 };
 
-export const todosReducer: Reducer<IInitialState, TodoActions> = (
+export const todosReducer: Reducer<TodoState, TodoActions> = (
   state = INITIAL_STATE,
   action: TodoActions
 ) => {
@@ -35,8 +37,14 @@ export const todosReducer: Reducer<IInitialState, TodoActions> = (
         ...state,
         todoList: state.todoList.map((t) => (t._id === action.payload._id ? action.payload : t)),
       };
+    case TodoActionTypes.TODOS_ERROR:
+      return {
+        ...state,
+        error: action.payload,
+      };
     case TodoActionTypes.RESET_TODOS:
       return {
+        ...state,
         todoList: [],
       };
     default:

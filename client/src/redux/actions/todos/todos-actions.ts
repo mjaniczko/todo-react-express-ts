@@ -10,6 +10,7 @@ export enum TodoActionTypes {
   DELETE_TODO = 'DELETE_TODO',
   UPDATE_TODO = 'UPDATE_TODO',
   RESET_TODOS = 'RESET_TODOS',
+  TODOS_ERROR = 'TODOS_ERROR',
 }
 
 interface FetchTodos {
@@ -36,7 +37,18 @@ interface ResetTodos {
   type: TodoActionTypes.RESET_TODOS;
 }
 
-export type TodoActions = FetchTodos | CreateTodo | DeleteTodo | UpdateTodo | ResetTodos;
+interface TodosError {
+  type: TodoActionTypes.TODOS_ERROR;
+  payload: string;
+}
+
+export type TodoActions =
+  | FetchTodos
+  | CreateTodo
+  | DeleteTodo
+  | UpdateTodo
+  | ResetTodos
+  | TodosError;
 
 export const fetchTodosAction = (todos: ITodo[]) => ({
   type: TodoActionTypes.FETCH_TODOS,
@@ -62,6 +74,11 @@ export const resetTodoAction = () => ({
   type: TodoActionTypes.RESET_TODOS,
 });
 
+export const todosActionError = (error: string) => ({
+  type: TodoActionTypes.TODOS_ERROR,
+  payload: error,
+});
+
 export const fetchTodos = () => {
   return async (dispatch: Dispatch) => {
     try {
@@ -73,8 +90,9 @@ export const fetchTodos = () => {
       });
       const data = await res.data;
       dispatch(fetchTodosAction(data.todos));
-    } catch (err) {
-      console.log(err.message);
+    } catch (error) {
+      console.log(error.response);
+      dispatch(todosActionError(error.response.data.error.message));
     }
   };
 };
@@ -98,7 +116,7 @@ export const createTodo = (todo: { name: string; description: string }) => {
       dispatch(createTodoAction(data.todo));
     } catch (error) {
       console.log(error.response);
-      console.log(error.message);
+      dispatch(todosActionError(error.response.data.error.message));
     }
   };
 };
@@ -114,7 +132,8 @@ export const deleteTodo = (id: string) => {
       });
       dispatch(deleteTodoAction(id));
     } catch (error) {
-      console.log(error);
+      console.log(error.response);
+      dispatch(todosActionError(error.response.data.error.message));
     }
   };
 };
@@ -129,8 +148,9 @@ export const updateTodo = (todo: ITodo) => {
         },
       });
       dispatch(updateTodoAction(todo));
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error.response);
+      dispatch(todosActionError(error.response.data.error.message));
     }
   };
 };

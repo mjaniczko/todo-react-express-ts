@@ -1,8 +1,9 @@
 import { useState, ChangeEvent, MouseEvent } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import { Input } from './UI/Input/Input';
+import { RootState } from '../redux/store';
 import { Button } from './UI/Button/Button';
 import { hasJWTToken } from './../utils/auth';
 import { login } from './../redux/actions/auth/auth-actions';
@@ -13,8 +14,9 @@ export const LoginPage = () => {
     password: '',
   });
 
-  const dispatch = useDispatch();
   const history = useHistory();
+  const dispatch = useDispatch();
+  const authError = useSelector((state: RootState) => state.auth.error);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -48,6 +50,7 @@ export const LoginPage = () => {
           placeholder='Password'
           onChange={handleChange}
         />
+        {authError.length > 0 && <span>{authError}</span>}
         <Button onClick={handleLogin} type='button'>
           Login
         </Button>

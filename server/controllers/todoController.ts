@@ -1,70 +1,46 @@
 import { Response, NextFunction } from 'express';
 
-import { ITodo } from '../types/todo';
-import { Todo } from '../models/todo';
-import { ApiError } from '../utils/ApiError';
 import { RequestWithUser } from '../types/shared';
+import {
+  getAllTodos,
+  deleteTodo as deleteTodoDB,
+  updateTodo as updateTodoDB,
+  createTodo as createTodoDB,
+} from '../db/todoQueries';
 
 const getTodos = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   try {
-    const todos = await Todo.find({ user: req.user._id });
+    const todos = await getAllTodos(req.user._id);
     res.status(200).json({ todos });
-  } catch (_) {
-    next(ApiError.badRequest('Failed to get todos.'));
+  } catch (err) {
+    next(err);
   }
 };
 
 const createTodo = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   try {
-    const body = req.body;
-    const todo = new Todo({
-      name: body.name,
-      description: body.description,
-      user: req.user._id,
-    });
-
-    const newTodo = await todo.save();
-
+    const newTodo = await createTodoDB(req.user._id, req.body);
     res.status(201).json({ todo: newTodo });
-  } catch (_) {
-    next(ApiError.badRequest('Failed to create todo. Name and description are required.'));
+  } catch (err) {
+    next(err);
   }
 };
 
 const deleteTodo = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   try {
-    const todo = await Todo.find({ user: req.user._id, _id: req.params.id });
-
-    if (!todo) {
-      return next(ApiError.notFound('Todo with given id was not found for logged in user.'));
-    }
-    const deletedTodo: ITodo | null = await Todo.findByIdAndRemove(req.params.id);
-    res.status(200).json({
-      todo: deletedTodo,
-    });
-    res.status(200);
-  } catch (_) {
-    console.log('Filed to delete todo');
+    const deletedTodo = await deleteTodoDB(req.user._id, req.params.id);
+    res.status(200).json({ deletedTodo });
+  } catch (err) {
+    next(err);
   }
 };
 
 const updateTodo = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   try {
-    const todos = await Todo.find({ user: req.user._id, _id: req.params.id });
-
-    if (!todos) {
-      next(ApiError.notFound('Todo with given id was not found for logged in user.'));
-    } else {
-      const updatedTodo: ITodo | null = await Todo.findOneAndUpdate(
-        { _id: req.params.id },
-        req.body
-      );
-      res.status(200).json({
-        updatedTodo,
-      });
-    }
-  } catch (_) {
-    console.log('Filed to update todo');
+    await updateTodoDB(req.user._id, req.params.id, req.body);
+    res.status(200).json({ updatedTodo: { ...req.body } });
+  } catch (err) {
+    next(err);
   }
 };
 
