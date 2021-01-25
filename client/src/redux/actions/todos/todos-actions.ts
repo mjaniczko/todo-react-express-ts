@@ -83,7 +83,7 @@ export const fetchTodos = () => {
   return async (dispatch: Dispatch) => {
     try {
       const token = getLocalStorageUserToken();
-      const res = await axios.get('http://localhost:8000/api/v1/todos', {
+      const res = await axios.get(process.env.REACT_APP_TODO_API_URL!, {
         headers: {
           Authorization: token,
         },
@@ -103,7 +103,7 @@ export const createTodo = (todo: { name: string; description: string }) => {
     try {
       const token = getLocalStorageUserToken();
       const res = await axios.post(
-        'http://localhost:8000/api/v1/todos',
+        process.env.REACT_APP_TODO_API_URL!,
         {
           ...todo,
         },
@@ -127,7 +127,7 @@ export const deleteTodo = (id: string) => {
   return async (dispatch: Dispatch) => {
     try {
       const token = getLocalStorageUserToken();
-      await axios.delete(`http://localhost:8000/api/v1/todos/${id}`, {
+      await axios.delete(`${process.env.REACT_APP_TODO_API_URL!}/${id}`, {
         headers: {
           Authorization: token,
         },
@@ -145,7 +145,7 @@ export const updateTodo = (todo: Todo) => {
   return async (dispatch: Dispatch) => {
     try {
       const token = getLocalStorageUserToken();
-      await axios.put(`http://localhost:8000/api/v1/todos/${todo._id}`, todo, {
+      await axios.put(`${process.env.REACT_APP_TODO_API_URL!}/${todo._id}`, todo, {
         headers: {
           Authorization: token,
         },

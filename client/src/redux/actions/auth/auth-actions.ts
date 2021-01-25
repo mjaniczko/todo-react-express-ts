@@ -57,7 +57,10 @@ export const authActionError = (error: string) => ({
 export const login = ({ email, password }: { email: string; password: string }) => {
   return async (dispatch: Dispatch) => {
     try {
-      const res = await axios.post('http://localhost:8000/api/v1/user/login', { email, password });
+      const res = await axios.post(`${process.env.REACT_APP_USER_API_URL!}/login`, {
+        email,
+        password,
+      });
       const data = res.data;
       setLocalStorageUserData(data.token);
       dispatch(loginAction({ token: data.token, ...data.user }));
@@ -86,7 +89,7 @@ export const getMe = () => {
   return async (dispatch: Dispatch) => {
     try {
       const token = getLocalStorageUserToken();
-      const res = await axios.get('http://localhost:8000/api/v1/user/me', {
+      const res = await axios.get(`${process.env.REACT_APP_USER_API_URL!}/me`, {
         headers: {
           Authorization: token,
         },
