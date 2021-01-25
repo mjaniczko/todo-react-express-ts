@@ -1,9 +1,9 @@
-import { ITodo } from '../../../types/interfaces';
+import { Todo } from '../../../types/interfaces';
 import { Reducer } from 'redux';
 import { TodoActions, TodoActionTypes } from '../../actions/todos/todos-actions';
 
 interface TodoState {
-  todoList: ITodo[];
+  todoList: Todo[];
   error: string;
 }
 
@@ -25,7 +25,7 @@ export const todosReducer: Reducer<TodoState, TodoActions> = (
     case TodoActionTypes.DELETE_TODO:
       return {
         ...state,
-        todoList: state.todoList.filter((todo: ITodo) => todo._id !== action.payload),
+        todoList: state.todoList.filter((todo: Todo) => todo._id !== action.payload),
       };
     case TodoActionTypes.CREATE_TODO:
       return {

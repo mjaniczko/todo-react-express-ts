@@ -1,5 +1,5 @@
 import { Todo } from '../models/todo';
-import { ITodo } from '../types/todo';
+import { Todo as TodoType } from '../types/todo';
 import { ErrorHandler, handleError } from '../utils/ErrorHandler';
 
 export const getAllTodos = async (userId: string) => {
@@ -16,7 +16,7 @@ export const deleteTodo = async (userId: string, todoId: string) => {
     if (todo.length === 0) {
       throw new ErrorHandler(404, 'Todo with given id was not found for logged in user.');
     }
-    const deletedTodo: ITodo | null = await Todo.findByIdAndRemove(todoId);
+    const deletedTodo: TodoType | null = await Todo.findByIdAndRemove(todoId);
     return deletedTodo;
   } catch (err) {
     return handleError(err);

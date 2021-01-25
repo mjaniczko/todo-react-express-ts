@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import validator from 'validator';
 import { model, Schema, Document } from 'mongoose';
-import { IUser } from '../types/user';
+import { User as UserType } from '../types/user';
 
 const userSchema: Schema = new Schema({
   name: {
@@ -24,7 +24,7 @@ const userSchema: Schema = new Schema({
     required: [true, 'Please confirm your password'],
     validate: {
       // This only works on CREATE and SAVE!!!
-      validator: function (this: IUser & Document, el: any): boolean {
+      validator: function (this: UserType & Document, el: any): boolean {
         return el === this.password;
       },
       message: 'Passwords are not the same.',
@@ -32,7 +32,7 @@ const userSchema: Schema = new Schema({
   },
 });
 
-userSchema.pre<IUser & Document>('save', async function (next) {
+userSchema.pre<UserType & Document>('save', async function (next) {
   // Only run this function if password was actually modified
   if (!this.isModified('password')) return next();
 
@@ -41,4 +41,4 @@ userSchema.pre<IUser & Document>('save', async function (next) {
   next();
 });
 
-export const User = model<IUser & Document>('User', userSchema);
+export const User = model<UserType & Document>('User', userSchema);

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Dispatch } from 'redux';
 
-import { ITodo } from '../../../types/interfaces';
+import { Todo } from '../../../types/interfaces';
 import { getLocalStorageUserToken } from '../../../utils/auth';
 
 export enum TodoActionTypes {
@@ -15,22 +15,22 @@ export enum TodoActionTypes {
 
 interface FetchTodos {
   type: TodoActionTypes.FETCH_TODOS;
-  payload: ITodo[];
+  payload: Todo[];
 }
 
 interface CreateTodo {
   type: TodoActionTypes.CREATE_TODO;
-  payload: ITodo;
+  payload: Todo;
 }
 
 interface DeleteTodo {
   type: TodoActionTypes.DELETE_TODO;
-  payload: ITodo['_id'];
+  payload: Todo['_id'];
 }
 
 interface UpdateTodo {
   type: TodoActionTypes.UPDATE_TODO;
-  payload: ITodo;
+  payload: Todo;
 }
 
 interface ResetTodos {
@@ -50,22 +50,22 @@ export type TodoActions =
   | ResetTodos
   | TodosError;
 
-export const fetchTodosAction = (todos: ITodo[]) => ({
+export const fetchTodosAction = (todos: Todo[]) => ({
   type: TodoActionTypes.FETCH_TODOS,
   payload: todos,
 });
 
-export const createTodoAction = (todo: ITodo) => ({
+export const createTodoAction = (todo: Todo) => ({
   type: TodoActionTypes.CREATE_TODO,
   payload: todo,
 });
 
-export const deleteTodoAction = (id: ITodo['_id']) => ({
+export const deleteTodoAction = (id: Todo['_id']) => ({
   type: TodoActionTypes.DELETE_TODO,
   payload: id,
 });
 
-export const updateTodoAction = (todo: ITodo) => ({
+export const updateTodoAction = (todo: Todo) => ({
   type: TodoActionTypes.UPDATE_TODO,
   payload: todo,
 });
@@ -91,7 +91,7 @@ export const fetchTodos = () => {
       const data = await res.data;
       dispatch(fetchTodosAction(data.todos));
     } catch (error) {
-      console.log(error.response);
+      // console.log(error.response);
       dispatch(todosActionError(error.response.data.error.message));
     }
   };
@@ -115,7 +115,7 @@ export const createTodo = (todo: { name: string; description: string }) => {
       const data = await res.data;
       dispatch(createTodoAction(data.todo));
     } catch (error) {
-      console.log(error.response);
+      // console.log(error.response);
       dispatch(todosActionError(error.response.data.error.message));
     }
   };
@@ -132,13 +132,13 @@ export const deleteTodo = (id: string) => {
       });
       dispatch(deleteTodoAction(id));
     } catch (error) {
-      console.log(error.response);
+      // console.log(error.response);
       dispatch(todosActionError(error.response.data.error.message));
     }
   };
 };
 
-export const updateTodo = (todo: ITodo) => {
+export const updateTodo = (todo: Todo) => {
   return async (dispatch: Dispatch) => {
     try {
       const token = getLocalStorageUserToken();
@@ -149,7 +149,7 @@ export const updateTodo = (todo: ITodo) => {
       });
       dispatch(updateTodoAction(todo));
     } catch (error) {
-      console.log(error.response);
+      // console.log(error.response);
       dispatch(todosActionError(error.response.data.error.message));
     }
   };

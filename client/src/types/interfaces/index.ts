@@ -4,7 +4,7 @@ export interface User {
   email: string;
 }
 
-export interface ITodo {
+export interface Todo {
   name: string;
   description: string;
   status: boolean;

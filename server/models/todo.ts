@@ -1,4 +1,4 @@
-import { ITodo } from '../types/todo';
+import { Todo as TodoType } from '../types/todo';
 import { model, Schema, Types } from 'mongoose';
 
 const todoSchema: Schema = new Schema({
@@ -22,4 +22,4 @@ const todoSchema: Schema = new Schema({
   },
 });
 
-export const Todo = model<ITodo>('Todo', todoSchema);
+export const Todo = model<TodoType>('Todo', todoSchema);

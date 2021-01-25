@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Button } from './UI/Button/Button';
 import { RootState } from '../redux/store';
-import { ITodo } from '../types/interfaces';
+import { Button } from './UI/Button/Button';
+import { Todo } from '../types/interfaces';
 import { fetchTodos, deleteTodo, updateTodo } from './../redux/actions/todos/todos-actions';
 
 export const TodosList = () => {
@@ -22,7 +22,7 @@ export const TodosList = () => {
     dispatch(deleteTodo(id));
   };
 
-  const toggleTodoStatus = (todo: ITodo) => {
+  const toggleTodoStatus = (todo: Todo) => {
     dispatch(updateTodo({ ...todo, status: !todo.status }));
   };
 
