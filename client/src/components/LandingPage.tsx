@@ -4,9 +4,12 @@ export const LandingPage = () => {
   return (
     <div>
       <h1>Todo App</h1>
-      <Link to='/login'>Login</Link>
-      <br />
-      <Link to='/todos'>Todos</Link>
+      <div>
+        <Link to='/login'>Login</Link>
+      </div>
+      <div>
+        <Link to='/todos'>Todos</Link>
+      </div>
     </div>
   );
 };

@@ -61,6 +61,7 @@ export const login = ({ email, password }: { email: string; password: string }) 
       const data = res.data;
       setLocalStorageUserData(data.token);
       dispatch(loginAction({ token: data.token, ...data.user }));
+      dispatch(authActionError(''));
     } catch (err) {
       // console.log(err.response.data.error.message);
       dispatch(authActionError(err.response.data.error.message));
@@ -73,6 +74,7 @@ export const logout = () => {
     try {
       removeLocalStorageUserData();
       dispatch(logoutAction());
+      dispatch(authActionError(''));
     } catch (err) {
       // console.log(err.response);
       dispatch(authActionError(err.response.data.error.message));
@@ -90,6 +92,7 @@ export const getMe = () => {
         },
       });
       dispatch(getMeAction({ ...res.data, token }));
+      dispatch(authActionError(''));
     } catch (err) {
       // console.log(err.response);
       dispatch(authActionError(err.response.data.error.message));
